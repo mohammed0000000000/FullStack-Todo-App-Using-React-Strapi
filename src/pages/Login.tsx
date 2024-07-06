@@ -88,7 +88,7 @@ const LoginPage = () => {
         </Button>
       </form>
       <p className="mt-3 text-center text-xl text-gray-400">
-        No Have Account Yet ?{" "}
+        Don't Have Account Yet ?{" "}
         <Link
           to="/register"
           className="text-indigo-500 hover:cursor-pointer font-semibold underline"

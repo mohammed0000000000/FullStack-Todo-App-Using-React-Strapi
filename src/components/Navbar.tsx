@@ -1,14 +1,35 @@
-import { NavLink } from "react-router-dom";
-const storageKey = "loggedInUser";
-const userDataString = localStorage.getItem(storageKey);
-const userData = userDataString ? JSON.parse(userDataString) : null;
-
-const handelLogout = () => {
-  localStorage.removeItem(storageKey);
-  location.replace("/login");
-};
+import { NavLink, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
+  const storageKey = "loggedInUser";
+  const userDataString = localStorage.getItem(storageKey);
+  const userData = userDataString ? JSON.parse(userDataString) : null;
+
+  const { pathname } = useLocation();
+
+  const handelLogout = () => {
+    localStorage.removeItem(storageKey);
+    toast("logged out Successfully", {
+      duration: 1500,
+      position: "top-center",
+      style: {
+        background: "#000",
+        color: "#fff",
+        zIndex: 999,
+        fontSize: 16,
+        fontWeight: 600,
+      },
+      icon: "👋",
+      iconTheme: {
+        primary: "#000",
+        secondary: "#fff",
+      },
+    });
+    setTimeout(() => {
+      location.replace(pathname);
+    }, 2000);
+  };
   return (
     <>
       <nav className="mt-5 mb-10 max-w-lg mx-auto px-3 py-5">
