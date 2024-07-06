@@ -28,7 +28,7 @@ const RegisterPage = () => {
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log(data);
+    // console.log(data);
     setIsLoading(true);
     /*
     status of request
