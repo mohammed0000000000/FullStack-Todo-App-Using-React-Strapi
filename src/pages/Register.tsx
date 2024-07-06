@@ -85,7 +85,7 @@ const RegisterPage = () => {
       >
         {renderRegisterForm}
         <div className="flex flex-row space-x-0">
-          <Button className="min-w-full">
+          <Button className="min-w-full" isLoading={isloading}>
             {isloading ? "Loading..." : "Register"}
           </Button>
           {/* <Button> Cancel</Button> */}
