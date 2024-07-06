@@ -3,7 +3,8 @@ import Input from "../components/ui/Input";
 import { REGISTER_FORM } from "../data/index";
 import InputErrorMessage from "../components/ui/InputErrorMessage";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { IRegisterInput } from "../interfaces";
+import { registerSchema } from "../validation";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface IFormInput {
   username: string;
@@ -16,7 +17,9 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    resolver: yupResolver(registerSchema),
+  });
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
     /*
