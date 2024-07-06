@@ -5,36 +5,64 @@ import {
 } from "react-router-dom";
 import RootLayout from "../pages/Layout";
 import ProtectedRoute from "../components/Auth/ProtectedRoute";
-import HomePage from "../pages/Login";
+import HomePage from "../pages/index";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 
-const isAllowed: boolean = false;
-const data: { data: string } = {
-  data: "mohammed",
-};
+const storageKey = "loggedInUser";
+const userDataString = localStorage.getItem(storageKey);
+const userData = userDataString ? JSON.parse(userDataString) : null;
+console.log(userData);
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* Rout Layout */}
+      {/* Root Layout */}
       <Route path="/" element={<RootLayout />}>
         <Route
           index
           element={
-            // <ProtectedRoute
-            //   isAllowed={isAllowed}
-            //   redirectPath="/login"
-            //   data={data}
-            // >
-            <HomePage />
-            // </ProtectedRoute>
+            <ProtectedRoute
+              isAllowed={userData?.jwt}
+              redirectPath="/login"
+              data={userData}
+            >
+              <HomePage />
+            </ProtectedRoute>
           }
         />
-
+        {/* <Route
+          path="/profile"
+          element={
+            <ProtectedRoute
+              isAllowed={userData?.jwt}
+              redirectPath="/login"
+              data={userData}
+            >
+              <h2>Profile page</h2>
+            </ProtectedRoute>
+          }
+        /> */}
+        {/* <Route
+          path="/todos"
+          element={
+            <ProtectedRoute
+              isAllowed={userData?.jwt}
+              redirectPath="/login"
+              data={userData}
+            >
+              <TodosPage />
+            </ProtectedRoute>
+          }
+        /> */}
         <Route
           path="login"
           element={
-            <ProtectedRoute isAllowed={!isAllowed} redirectPath="/" data={data}>
+            <ProtectedRoute
+              isAllowed={!userData?.jwt}
+              redirectPath="/"
+              data={userData}
+            >
               <LoginPage />
             </ProtectedRoute>
           }
@@ -43,15 +71,18 @@ const router = createBrowserRouter(
           path="register"
           element={
             <ProtectedRoute
-              isAllowed={!isAllowed}
+              isAllowed={!userData?.jwt}
               redirectPath="/login"
-              data={data}
+              data={userData}
             >
               <RegisterPage />
             </ProtectedRoute>
           }
         />
       </Route>
+
+      {/* Page Not Found */}
+      {/* <Route path="*" element={<PageNotFound />} /> */}
     </>
   )
 );

@@ -10,7 +10,7 @@ interface IProp {
 
 const ProtectedRoute = ({ isAllowed, redirectPath, children, data }: IProp) => {
   if (!isAllowed)
-    return <Navigate to={redirectPath} replace={true} state={data}></Navigate>;
+    return <Navigate to={redirectPath} replace state={data}></Navigate>;
   return children;
 };
 

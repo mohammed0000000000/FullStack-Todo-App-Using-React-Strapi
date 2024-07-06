@@ -1,5 +1,11 @@
+console.log("Visit Home Page");
+
 const HomePage = () => {
-  return <h1>You are login Success</h1>;
+  return (
+    <div>
+      <h1>Welcome Mohammed</h1>
+    </div>
+  );
 };
 
 export default HomePage;

@@ -10,6 +10,7 @@ import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { IErrorResponse } from "../interfaces";
+import { Link } from "react-router-dom";
 
 interface IFormInput {
   identifier: string;
@@ -25,20 +26,25 @@ const LoginPage = () => {
     resolver: yupResolver(loginSchema),
   });
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log(data);
+    // console.log(data);
     setIsLoading(true);
     try {
-      await axiosInstance.post("/auth/local", data);
+      const { data: userData } = await axiosInstance.post("/auth/local", data);
       toast.success("Successfully Logged in!", {
-        duration: 4000,
+        duration: 1500,
         position: "bottom-center",
         style: {
           background: "black",
           color: "white",
         },
       });
+      localStorage.setItem("loggedInUser", JSON.stringify(userData));
+      setTimeout(() => {
+        console.log("Navigate to Home page...");
+        location.replace("/");
+      }, 2000);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const errorObj = error as AxiosError<IErrorResponse>;
       const msg = errorObj?.response?.data?.error?.message;
       toast.error(`${msg}`, {
@@ -81,6 +87,15 @@ const LoginPage = () => {
           Login
         </Button>
       </form>
+      <p className="mt-3 text-center text-xl text-gray-400">
+        No Have Account Yet ?{" "}
+        <Link
+          to="/register"
+          className="text-indigo-500 hover:cursor-pointer font-semibold underline"
+        >
+          register
+        </Link>
+      </p>
     </div>
   );
 };
