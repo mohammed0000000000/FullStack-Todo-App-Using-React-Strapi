@@ -1,21 +1,20 @@
 // import { useEffect, useState } from "react";
-import axiosInstance from "../config/axios.config";
 // import { ITodo } from "../interfaces";
 import Button from "../components/ui/Button";
-import { useQuery } from "@tanstack/react-query";
 import { ITodo } from "../interfaces";
+import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
 
 const HomePage = () => {
   const storageKey = "loggedInUser";
   const userData = JSON.parse(`${localStorage.getItem(storageKey)}`);
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data } = useAuthenticatedQuery({
     queryKey: ["todos"],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get("/users/me?populate=todos", {
-        headers: { Authorization: `Bearer ${userData.jwt}` },
-      });
-      return data;
+    url: "/users/me?populate=todos",
+    config: {
+      headers: {
+        Authorization: `Bearer ${userData.jwt}`,
+      },
     },
   });
 
@@ -42,17 +41,22 @@ const HomePage = () => {
   }, [userData.jwt]);
 */ // Render Todos
   // console.log(userData);
-  if (isLoading) return <h3 className="">Loading...</h3>;
+  if (isLoading)
+    return (
+      <h3 className="mx-auto text-indigo-600 font-bold text-3xlmx-auto ">
+        Loading...
+      </h3>
+    );
   // if (error) return <h3 className="">Something Went Wrong Try Again...</h3>;
   return (
     <>
       <div className="flex flex-col mx-auto max-w-md text-center">
-        {data.todos.length == 0 ? (
+        {data?.todos?.length == 0 ? (
           <h3 className="text-indigo-600 font-bold text-3xl">
             NO TODOS YET...!
           </h3>
         ) : (
-          data.todos.map((todo: ITodo) => {
+          data?.todos?.map((todo: ITodo) => {
             return (
               <div
                 className="flex flex-row items-center justify-between space-y-2 p-2 rounded-md odd:bg-gray-200"
