@@ -36,5 +36,5 @@ export interface IErrorResponse {
 export interface ITodo {
   id: number;
   title: string;
-  createdAt: string;
+  description: string;
 }
