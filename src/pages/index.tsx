@@ -8,6 +8,7 @@ import Input from "../components/ui/Input";
 import axiosInstance from "../config/axios.config";
 import Textarea from "../components/ui/Textarea";
 import toast from "react-hot-toast";
+import TodoSkeleton from "../components/TodoSkeleton";
 
 const HomePage = () => {
   const storageKey = "loggedInUser";
@@ -73,7 +74,7 @@ const HomePage = () => {
             width: "fit-content",
           },
         });
-        closeModel();
+        closeConformModel();
       }
     } catch (error) {
       console.log(error);
@@ -90,14 +91,40 @@ const HomePage = () => {
   };
 
   // OnDeleteHandler
-  // const onDeleteHandler = async (event: MouseEvent<HTMLButtonElement>) => {
-  //   const { id } = event.target;
-  // };
+  const onDeleteHandler = async () => {
+    console.log(todoData.id);
+    try {
+      const response = await axiosInstance.delete(`/todos/${todoData.id}`, {
+        headers: {
+          Authorization: `Bearer ${userData.jwt}`,
+        },
+      });
+      if (response.status == 200) {
+        toast.success("Deleted successfully", {
+          position: "bottom-center",
+          duration: 1500,
+          style: {
+            background: "#000",
+            color: "#fff",
+            width: "fit-content",
+          },
+        });
+        closeModel();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  if (isLoading)
+  if (true) {
     return (
-      <h3 className="mx-auto text-indigo-600 font-bold text-3xl">Loading...</h3>
+      <div className="max-w-md mx-auto shadow animate-pulse" role="status">
+        {Array.from({ length: 3 }, (_, idx) => (
+          <TodoSkeleton key={idx}></TodoSkeleton>
+        ))}
+      </div>
     );
+  }
   return (
     <>
       <div className="flex flex-col mx-auto max-w-md text-center space-y-3">
@@ -132,7 +159,10 @@ const HomePage = () => {
                     variant={"danger"}
                     size={"sm"}
                     className="hover:bg-red-600"
-                    onClick={() => setIConfirmModelOpen(true)}
+                    onClick={() => {
+                      setIConfirmModelOpen(true);
+                      setTodoData({ ...todo });
+                    }}
                   >
                     Delete
                   </Button>
@@ -195,7 +225,7 @@ const HomePage = () => {
                 size={"default"}
                 fullWidth={true}
                 className="hover:bg-red-600"
-                onClick={() => setIConfirmModelOpen(true)}
+                onClick={closeModel}
               >
                 Cancel
               </Button>
@@ -217,8 +247,9 @@ const HomePage = () => {
               size={"default"}
               fullWidth={true}
               className="hover:bg-red-600"
+              onClick={onDeleteHandler}
             >
-              Remove
+              Yes, Remove
             </Button>
             <Button
               variant={"cancel"}
