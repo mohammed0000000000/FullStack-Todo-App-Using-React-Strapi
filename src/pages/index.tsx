@@ -65,6 +65,7 @@ const HomePage = () => {
           data: {
             title,
             description,
+            user: [userData.user.id],
           },
         },
         {
