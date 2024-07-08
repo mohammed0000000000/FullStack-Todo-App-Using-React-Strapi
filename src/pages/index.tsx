@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 // import { ITodo } from "../interfaces";
 import Button from "../components/ui/Button";
 import { ITodo } from "../interfaces";
-import useAuthenticatedQuery from "../hooks/useAuthenticatedQuery";
+import useCustomQuery from "../hooks/useAuthenticatedQuery";
 import Model from "../components/ui/Model";
 import Input from "../components/ui/Input";
 import axiosInstance from "../config/axios.config";
@@ -25,13 +25,14 @@ const HomePage = () => {
   });
   const [updateTodoData, setUpdateTodoData] = useState(false);
   const [isConfirmModelOpen, setIConfirmModelOpen] = useState(false);
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [queryVersion, setQueryVersion] = useState<number>(1);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const closeConformModel = () => setIConfirmModelOpen(false);
   const [isOpenToCreateTodo, setOPenToCreateTodo] = useState(false);
   // Fetching & Re-Fetching Todo-S
-  const { isLoading, data } = useAuthenticatedQuery({
-    queryKey: ["todoList", `${todoData.id}`],
+  const { isLoading, data } = useCustomQuery({
+    queryKey: ["todoList", `${queryVersion}`],
     url: "/users/me?populate=todos",
     config: {
       headers: {
@@ -83,6 +84,7 @@ const HomePage = () => {
             width: "fit-content",
           },
         });
+        setQueryVersion((prev) => prev + 1);
         setLoadingCreateTodo(false);
         closeModelToCreateTodo();
         setCreateTodoData((prev) => ({ ...prev, title: "", description: "" }));
@@ -122,6 +124,7 @@ const HomePage = () => {
             width: "fit-content",
           },
         });
+        setQueryVersion((prev) => prev + 1);
         closeConformModel();
       }
     } catch (error) {
@@ -141,7 +144,7 @@ const HomePage = () => {
 
   // OnDeleteHandler
   const onDeleteHandler = async () => {
-    console.log(todoData.id);
+    setIsDeleteLoading(true);
     try {
       const response = await axiosInstance.delete(`/todos/${todoData.id}`, {
         headers: {
@@ -158,7 +161,9 @@ const HomePage = () => {
             width: "fit-content",
           },
         });
-        closeModel();
+        setIsDeleteLoading(false);
+        setQueryVersion((prev) => prev + 1);
+        closeConformModel();
       }
     } catch (error) {
       console.log(error);
@@ -190,7 +195,7 @@ const HomePage = () => {
             NO TODOS YET...!
           </h3>
         ) : (
-          data?.todos?.map((todo: ITodo) => {
+          data?.todos?.reverse().map((todo: ITodo) => {
             return (
               <div
                 className="flex flex-row items-center justify-between py-2 px-3 rounded-lg even:bg-gray-200"
@@ -261,7 +266,7 @@ const HomePage = () => {
                 size={"default"}
                 fullWidth={true}
                 className="hover:bg-indigo-600 bg-indigo-600"
-                isLoading={updateTodoData}
+                isLoading={isLoadingCreateTodo}
               >
                 Create
               </Button>
@@ -271,6 +276,7 @@ const HomePage = () => {
                 fullWidth={true}
                 className="hover:bg-red-600"
                 onClick={closeModelToCreateTodo}
+                type="button"
               >
                 Cancel
               </Button>
@@ -334,6 +340,7 @@ const HomePage = () => {
                 fullWidth={true}
                 className="hover:bg-red-600"
                 onClick={closeModel}
+                type="button"
               >
                 Cancel
               </Button>
@@ -357,6 +364,7 @@ const HomePage = () => {
               fullWidth={true}
               className="hover:bg-red-600"
               onClick={onDeleteHandler}
+              isLoading={isDeleteLoading}
             >
               Yes, Remove
             </Button>
@@ -366,6 +374,7 @@ const HomePage = () => {
               fullWidth={true}
               className="hover:bg-gray-400"
               onClick={() => closeConformModel()}
+              type="button"
             >
               Cancel
             </Button>
