@@ -116,7 +116,7 @@ const HomePage = () => {
     }
   };
 
-  if (true) {
+  if (isLoading) {
     return (
       <div className="max-w-md mx-auto shadow animate-pulse" role="status">
         {Array.from({ length: 3 }, (_, idx) => (
