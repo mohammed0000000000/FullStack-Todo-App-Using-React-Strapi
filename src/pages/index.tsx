@@ -128,7 +128,7 @@ const HomePage = () => {
           },
         });
         setQueryVersion((prev) => prev + 1);
-        closeConformModel();
+        closeModel();
       }
     } catch (error) {
       console.log(error);
@@ -187,7 +187,7 @@ const HomePage = () => {
       <div className="flex flex-col mx-auto max-w-md text-center space-y-3">
         <div>
           <Button
-            className="w-fit mx-auto my-10 hover:bg-indigo-600 duration-300 animate-pulse"
+            className="w-fit mx-auto my-10 hover:bg-black duration-300 animate-pulse"
             onClick={() => setOPenToCreateTodo(true)}
           >
             Post new Todo
@@ -208,7 +208,7 @@ const HomePage = () => {
                 <div className="flex space-x-3 items-center justify-center max-w-full">
                   <Button
                     size={"sm"}
-                    className="hover:bg-indigo-600"
+                    className="hover:bg-black"
                     onClick={() => {
                       setIsOpen(true);
                       setTodoData({
@@ -223,7 +223,7 @@ const HomePage = () => {
                   <Button
                     variant={"danger"}
                     size={"sm"}
-                    className="hover:bg-red-600"
+                    className="hover:bg-red-500"
                     onClick={() => {
                       setIConfirmModelOpen(true);
                       setTodoData({ ...todo });
@@ -268,7 +268,7 @@ const HomePage = () => {
               <Button
                 size={"default"}
                 fullWidth={true}
-                className="hover:bg-indigo-600 bg-indigo-600"
+                className="hover:bg-indigo-black bg-indigo-600"
                 isLoading={isLoadingCreateTodo}
               >
                 Create
@@ -277,7 +277,7 @@ const HomePage = () => {
                 variant={"danger"}
                 size={"default"}
                 fullWidth={true}
-                className="hover:bg-red-600"
+                className="hover:bg-red-500"
                 onClick={closeModelToCreateTodo}
                 type="button"
               >
@@ -332,7 +332,7 @@ const HomePage = () => {
               <Button
                 size={"default"}
                 fullWidth={true}
-                className="hover:bg-indigo-600 bg-indigo-600"
+                className="hover:bg-black bg-indigo-600"
                 isLoading={updateTodoData}
               >
                 Update
@@ -341,7 +341,7 @@ const HomePage = () => {
                 variant={"danger"}
                 size={"default"}
                 fullWidth={true}
-                className="hover:bg-red-600"
+                className="hover:bg-red-500"
                 onClick={closeModel}
                 type="button"
               >
