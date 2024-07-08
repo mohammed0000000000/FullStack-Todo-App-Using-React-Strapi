@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 // import { ITodo } from "../interfaces";
 import Button from "../components/ui/Button";
 import { ITodo } from "../interfaces";
-import useCustomQuery from "../hooks/useAuthenticatedQuery";
+import useCustomQuery from "../hooks/useCustomQuery";
 import Model from "../components/ui/Model";
 import Input from "../components/ui/Input";
 import axiosInstance from "../config/axios.config";
@@ -33,7 +33,7 @@ const HomePage = () => {
   // Fetching & Re-Fetching Todo-S
   const { isLoading, data } = useCustomQuery({
     queryKey: ["todoList", `${queryVersion}`],
-    url: "/users/me?populate=todos",
+    url: "/users/me?populate=usertodos",
     config: {
       headers: {
         Authorization: `Bearer ${userData.jwt}`,
@@ -57,6 +57,8 @@ const HomePage = () => {
   const createTodoHandle = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingCreateTodo(true);
+    console.log(typeof userData.user.id);
+    console.log(userData.user.id);
     const { title, description } = createTodoData;
     try {
       const response = await axiosInstance.post(
@@ -191,12 +193,12 @@ const HomePage = () => {
             Post new Todo
           </Button>
         </div>
-        {data?.todos?.length == 0 ? (
+        {data?.usertodos?.length == 0 ? (
           <h3 className="text-indigo-600 font-bold text-3xl">
             NO TODOS YET...!
           </h3>
         ) : (
-          data?.todos?.reverse().map((todo: ITodo) => {
+          data?.usertodos?.map((todo: ITodo) => {
             return (
               <div
                 className="flex flex-row items-center justify-between py-2 px-3 rounded-lg even:bg-gray-200"
