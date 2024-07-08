@@ -18,9 +18,13 @@ const HomePage = () => {
     title: "",
     description: "",
   });
-  // Update Todo
   const [updateTodoData, setUpdateTodoData] = useState(false);
+  const [isConfirmModelOpen, setIConfirmModelOpen] = useState(false);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
+  const closeConformModel = () => setIConfirmModelOpen(false);
+
+  // Fetching & Re-Fetching Todo-s
   const { isLoading, data } = useAuthenticatedQuery({
     queryKey: ["todoList", `${todoData.id}`],
     url: "/users/me?populate=todos",
@@ -85,6 +89,11 @@ const HomePage = () => {
     setTodoData({ ...todoData, [name]: value });
   };
 
+  // OnDeleteHandler
+  // const onDeleteHandler = async (event: MouseEvent<HTMLButtonElement>) => {
+  //   const { id } = event.target;
+  // };
+
   if (isLoading)
     return (
       <h3 className="mx-auto text-indigo-600 font-bold text-3xl">Loading...</h3>
@@ -123,6 +132,7 @@ const HomePage = () => {
                     variant={"danger"}
                     size={"sm"}
                     className="hover:bg-red-600"
+                    onClick={() => setIConfirmModelOpen(true)}
                   >
                     Delete
                   </Button>
@@ -185,12 +195,41 @@ const HomePage = () => {
                 size={"default"}
                 fullWidth={true}
                 className="hover:bg-red-600"
-                onClick={() => closeModel()}
+                onClick={() => setIConfirmModelOpen(true)}
               >
                 Cancel
               </Button>
             </div>
           </form>
+        </Model>
+
+        <Model
+          isOpen={isConfirmModelOpen}
+          closeModal={closeConformModel}
+          title="DELETE TODO"
+        >
+          <p className="text-center my-7 text-xl p-2">
+            Click on Delete to Remove Todo or Cancel
+          </p>
+          <div className="flex flex-row space-x-3">
+            <Button
+              variant={"danger"}
+              size={"default"}
+              fullWidth={true}
+              className="hover:bg-red-600"
+            >
+              Remove
+            </Button>
+            <Button
+              variant={"cancel"}
+              size={"default"}
+              fullWidth={true}
+              className="hover:bg-gray-400"
+              onClick={() => closeConformModel()}
+            >
+              Cancel
+            </Button>
+          </div>
         </Model>
       </div>
     </>
