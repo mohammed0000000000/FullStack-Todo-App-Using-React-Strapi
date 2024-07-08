@@ -19,13 +19,17 @@ const HomePage = () => {
     title: "",
     description: "",
   });
+  const [createTodoData, setCreateTodoData] = useState({
+    title: "",
+    description: "",
+  });
   const [updateTodoData, setUpdateTodoData] = useState(false);
   const [isConfirmModelOpen, setIConfirmModelOpen] = useState(false);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const closeConformModel = () => setIConfirmModelOpen(false);
-
-  // Fetching & Re-Fetching Todo-s
+  const [isOpenToCreateTodo, setOPenToCreateTodo] = useState(false);
+  // Fetching & Re-Fetching Todo-S
   const { isLoading, data } = useAuthenticatedQuery({
     queryKey: ["todoList", `${todoData.id}`],
     url: "/users/me?populate=todos",
@@ -45,6 +49,50 @@ const HomePage = () => {
     });
     setIsOpen(false);
   };
+  const closeModelToCreateTodo = () => setOPenToCreateTodo(false);
+
+  // Create a new Todo
+  const [isLoadingCreateTodo, setLoadingCreateTodo] = useState(false);
+  const createTodoHandle = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoadingCreateTodo(true);
+    const { title, description } = createTodoData;
+    try {
+      const response = await axiosInstance.post(
+        "/todos",
+        {
+          data: {
+            title,
+            description,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.jwt}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.status == 200) {
+        toast.success("Created successfully", {
+          position: "bottom-center",
+          duration: 1500,
+          style: {
+            background: "#000",
+            color: "#fff",
+            width: "fit-content",
+          },
+        });
+        setLoadingCreateTodo(false);
+        closeModelToCreateTodo();
+        setCreateTodoData((prev) => ({ ...prev, title: "", description: "" }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //
   const submitFormHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { title, description } = todoData;
@@ -88,6 +136,7 @@ const HomePage = () => {
   ) => {
     const { name, value } = event.target;
     setTodoData({ ...todoData, [name]: value });
+    setCreateTodoData({ ...createTodoData, [name]: value });
   };
 
   // OnDeleteHandler
@@ -128,6 +177,14 @@ const HomePage = () => {
   return (
     <>
       <div className="flex flex-col mx-auto max-w-md text-center space-y-3">
+        <div>
+          <Button
+            className="w-fit mx-auto my-10 hover:bg-indigo-600 duration-300 animate-pulse"
+            onClick={() => setOPenToCreateTodo(true)}
+          >
+            Post new Todo
+          </Button>
+        </div>
         {data?.todos?.length == 0 ? (
           <h3 className="text-indigo-600 font-bold text-3xl">
             NO TODOS YET...!
@@ -171,6 +228,57 @@ const HomePage = () => {
             );
           })
         )}
+
+        {/* Model For Create TODO */}
+
+        <Model
+          isOpen={isOpenToCreateTodo}
+          closeModal={closeModelToCreateTodo}
+          title="CREATE TODO"
+        >
+          <form
+            className="flex flex-col items-center space-y-3"
+            onSubmit={createTodoHandle}
+          >
+            <div className="w-full">
+              <label htmlFor="title" className="font-semibold text-lg">
+                Title
+              </label>
+              <Input id="title" name="title" onChange={onChangeHandler}></Input>
+            </div>
+            <div className="w-full text-lg">
+              <label htmlFor="description" className="font-semibold">
+                Description
+              </label>
+              <Textarea
+                id="description"
+                name="description"
+                onChange={onChangeHandler}
+              ></Textarea>
+            </div>
+            <div className="w-full flex flex-row items-center justify-between space-x-5">
+              <Button
+                size={"default"}
+                fullWidth={true}
+                className="hover:bg-indigo-600 bg-indigo-600"
+                isLoading={updateTodoData}
+              >
+                Create
+              </Button>
+              <Button
+                variant={"danger"}
+                size={"default"}
+                fullWidth={true}
+                className="hover:bg-red-600"
+                onClick={closeModelToCreateTodo}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Model>
+
+        {/* Model For Edit TODO */}
         <Model isOpen={isOpen} closeModal={closeModel} title="EDIT TODO">
           <form
             className="flex flex-col items-center space-y-3"
@@ -233,6 +341,7 @@ const HomePage = () => {
           </form>
         </Model>
 
+        {/* Model For Delete Todo */}
         <Model
           isOpen={isConfirmModelOpen}
           closeModal={closeConformModel}

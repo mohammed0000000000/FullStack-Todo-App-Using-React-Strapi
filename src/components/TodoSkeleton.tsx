@@ -1,6 +1,4 @@
-interface IProps {}
-
-const TodoSkeleton = ({}: IProps) => {
+const TodoSkeleton = () => {
   return (
     <>
       <div className="flex flex-row items-center justify-between">
