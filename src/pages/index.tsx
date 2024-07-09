@@ -9,6 +9,7 @@ import axiosInstance from "../config/axios.config";
 import Textarea from "../components/ui/Textarea";
 import toast from "react-hot-toast";
 import TodoSkeleton from "../components/TodoSkeleton";
+import { faker } from "@faker-js/faker";
 
 const HomePage = () => {
   const storageKey = "loggedInUser";
@@ -173,6 +174,40 @@ const HomePage = () => {
     }
   };
 
+  // Generate Fake Todo
+  const GenerateFakeTodo = async () => {
+    for (let i = 0; i < 100; i++) {
+      try {
+        const { status, data } = await axiosInstance.post(
+          "/todos",
+          {
+            data: {
+              title: faker.word.words({ count: { min: 5, max: 10 } }),
+              description: faker.lorem.lines(2),
+              user: [userData.user.id],
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.jwt}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log("Generate Fake Todo Error " + error);
+      }
+    }
+    toast.success("Fake Todo created successfully", {
+      position: "bottom-center",
+      duration: 1500,
+      style: {
+        background: "#000",
+        color: "#fff",
+        width: "fit-content",
+      },
+    });
+    setQueryVersion((prev) => prev + 1);
+  };
   if (isLoading) {
     return (
       <div className="max-w-md mx-auto shadow animate-pulse" role="status">
@@ -185,12 +220,19 @@ const HomePage = () => {
   return (
     <>
       <div className="flex flex-col mx-auto max-w-md text-center space-y-3">
-        <div>
+        <div className="flex items-center justify-center my-10 space-x-2">
           <Button
-            className="w-fit mx-auto my-10 hover:bg-black duration-300 animate-pulse"
+            className="w-fit hover:bg-black duration-300 animate-pulse bg-indigo-700 px-5 py-3 border border-transparent"
             onClick={() => setOPenToCreateTodo(true)}
           >
             Post new Todo
+          </Button>
+          <Button
+            className="w-fit bg-white text-black px-5 py-3 font-semibold border border-gray-400 
+          hover:bg-indigo-600 hover:text-white duration-300 hover:border-transparent"
+            onClick={() => GenerateFakeTodo()}
+          >
+            Generate Todo
           </Button>
         </div>
         {data?.usertodos?.length == 0 ? (
@@ -204,11 +246,13 @@ const HomePage = () => {
                 className="flex flex-row items-center justify-between py-2 px-3 rounded-lg even:bg-gray-200"
                 key={todo.id}
               >
-                <p className="font-semibold max-w-full text-lg">{todo.title}</p>
+                <p className="font-semibold max-w-full text-lg text-nowrap text-ellipsis overflow-hidden hover:text-wrap">
+                  {todo.title}
+                </p>
                 <div className="flex space-x-3 items-center justify-center max-w-full">
                   <Button
                     size={"sm"}
-                    className="hover:bg-black"
+                    className="hover:bg-black px-5"
                     onClick={() => {
                       setIsOpen(true);
                       setTodoData({
