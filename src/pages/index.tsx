@@ -178,7 +178,7 @@ const HomePage = () => {
   const GenerateFakeTodo = async () => {
     for (let i = 0; i < 100; i++) {
       try {
-        const { status, data } = await axiosInstance.post(
+        await axiosInstance.post(
           "/todos",
           {
             data: {
@@ -195,6 +195,7 @@ const HomePage = () => {
         );
       } catch (error) {
         console.log("Generate Fake Todo Error " + error);
+        break;
       }
     }
     toast.success("Fake Todo created successfully", {

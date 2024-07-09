@@ -8,6 +8,7 @@ import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import HomePage from "../pages/index";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
+import TodosPage from "../pages/Todos";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
@@ -42,8 +43,8 @@ const router = createBrowserRouter(
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/todos"
+        <Route
+          path="todos"
           element={
             <ProtectedRoute
               isAllowed={userData?.jwt}
@@ -53,7 +54,7 @@ const router = createBrowserRouter(
               <TodosPage />
             </ProtectedRoute>
           }
-        /> */}
+        />
         <Route
           path="login"
           element={

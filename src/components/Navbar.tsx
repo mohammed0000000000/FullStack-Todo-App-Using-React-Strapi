@@ -39,19 +39,42 @@ const Navbar = () => {
           </li>
           {userData ? (
             <div className="flex flex-row space-x-3">
-              <li className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1">
+              <li
+                className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500
+               hover:bg-gray-200 rounded-2xl px-3 py-1"
+                style={{ margin: 0 }}
+              >
                 <NavLink to="/profile">Profile</NavLink>
               </li>
-              <li className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1">
+              <li
+                className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500
+               hover:bg-gray-200 rounded-2xl px-3 py-1"
+                style={{ margin: 0 }}
+              >
+                <NavLink to="/todos">Todos</NavLink>
+              </li>
+              <li
+                className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500
+               hover:bg-gray-200 rounded-2xl px-3 py-1"
+                style={{ margin: 0 }}
+              >
                 <button onClick={handelLogout}>Logout</button>
               </li>
             </div>
           ) : (
             <div className="flex flex-row space-x-3">
-              <li className="text-black duration-300 font-bold text-lg hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1">
+              <li
+                className="text-black duration-300 font-bold text-lg 
+              hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1"
+                style={{ margin: 0 }}
+              >
                 <NavLink to="/register">Register</NavLink>
               </li>
-              <li className="duration-300 text-black text-lg font-bold  hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1">
+              <li
+                className="duration-300 text-black text-lg font-bold  
+              hover:text-xl hover:text-indigo-500 hover:bg-gray-200 rounded-2xl px-3 py-1"
+                style={{ margin: 0 }}
+              >
                 <NavLink to="/login">Login</NavLink>
               </li>
             </div>
