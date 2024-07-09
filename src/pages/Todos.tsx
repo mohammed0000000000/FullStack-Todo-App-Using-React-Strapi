@@ -44,11 +44,6 @@ const TodosPage = () => {
       </div>
     );
   }
-  const {
-    meta: {
-      pagination: { pageCount, total },
-    },
-  } = data;
   return (
     <>
       <div className="flex flex-col mx-auto max-w-md text-center space-y-3">
@@ -105,10 +100,10 @@ const TodosPage = () => {
         )}
         <Paginator
           page={page}
-          pageCount={pageCount}
+          pageCount={data.meta.pagination.pageCount}
           onClickPrev={onClickPrev}
           isLoading={isLoading || isFetching}
-          total={total}
+          total={data.meta.pagination.total}
           onClickNext={onClickNext}
         ></Paginator>
       </div>
