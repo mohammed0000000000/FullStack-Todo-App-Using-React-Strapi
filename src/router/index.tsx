@@ -9,6 +9,7 @@ import HomePage from "../pages/index";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import TodosPage from "../pages/Todos";
+import ProfilePage from "../pages/Profile";
 
 const storageKey = "loggedInUser";
 const userDataString = localStorage.getItem(storageKey);
@@ -39,7 +40,7 @@ const router = createBrowserRouter(
               redirectPath="/login"
               data={userData}
             >
-              <h2>Profile page</h2>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
