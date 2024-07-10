@@ -10,6 +10,7 @@ import Textarea from "../components/ui/Textarea";
 import toast from "react-hot-toast";
 import TodoSkeleton from "../components/TodoSkeleton";
 import { faker } from "@faker-js/faker";
+// import { useForm } from "react-hook-form";
 
 const HomePage = () => {
   const storageKey = "loggedInUser";
@@ -41,6 +42,10 @@ const HomePage = () => {
       },
     },
   });
+  const [updateErrors, setUpdateErros] = useState({
+    title: "",
+    description: "",
+  });
   const closeModel = () => {
     setTodoData((prev) => {
       return {
@@ -57,9 +62,32 @@ const HomePage = () => {
   const [isLoadingCreateTodo, setLoadingCreateTodo] = useState(false);
   const createTodoHandle = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!createTodoData["title"].length) {
+      toast.error("Title is required", {
+        position: "bottom-center",
+        duration: 3500,
+        style: {
+          background: "#000",
+          color: "#fff",
+          width: "fit-content",
+        },
+      });
+      return;
+    }
+    if (createTodoData["title"].length < 4) {
+      toast.error("Title Should be at least 4 Chars", {
+        position: "bottom-center",
+        duration: 3500,
+        style: {
+          background: "#000",
+          color: "#fff",
+          width: "fit-content",
+        },
+      });
+      return;
+    }
+
     setLoadingCreateTodo(true);
-    console.log(typeof userData.user.id);
-    console.log(userData.user.id);
     const { title, description } = createTodoData;
     try {
       const response = await axiosInstance.post(
@@ -97,10 +125,22 @@ const HomePage = () => {
       console.log(error);
     }
   };
-
   //
   const submitFormHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!todoData["title"].length) {
+      setUpdateErros({
+        title: "You Must Provide a Title",
+        description: "",
+      });
+      return;
+    } else if (todoData["title"].length < 4) {
+      setUpdateErros({
+        title: "Title should be at least 4 characters",
+        description: "",
+      });
+      return;
+    }
     const { title, description } = todoData;
     setUpdateTodoData(true);
     try {
@@ -128,6 +168,10 @@ const HomePage = () => {
             width: "fit-content",
           },
         });
+        setUpdateErros({
+          title: "",
+          description: "",
+        });
         setQueryVersion((prev) => prev + 1);
         closeModel();
       }
@@ -142,6 +186,7 @@ const HomePage = () => {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
+
     setTodoData({ ...todoData, [name]: value });
     setCreateTodoData({ ...createTodoData, [name]: value });
   };
@@ -209,6 +254,9 @@ const HomePage = () => {
     });
     setQueryVersion((prev) => prev + 1);
   };
+
+  // Validations on update Field
+
   if (isLoading) {
     return (
       <div className="max-w-md mx-auto shadow animate-pulse" role="status">
@@ -359,7 +407,13 @@ const HomePage = () => {
                 id="title"
                 name="title"
                 onChange={onChangeHandler}
+                // {...register("title")}
               ></Input>
+              {updateErrors["title"] ? (
+                <span className="inline-block text-red-500">
+                  {"* " + updateErrors["title"]}
+                </span>
+              ) : null}
             </div>
             <div className="w-full">
               <label htmlFor="description" className="font-semibold">
