@@ -15,7 +15,7 @@ const TodosPage = () => {
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [sortedBy, setSortedBy] = useState<string>("Latest");
+  const [sortedBy, setSortedBy] = useState<string>("desc");
 
   const onClickPrev = () => {
     setPage((prev) => prev - 1);
@@ -98,6 +98,7 @@ const TodosPage = () => {
             );
           })
         )}
+
         <Paginator
           page={page}
           pageCount={data.meta.pagination.pageCount}
